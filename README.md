@@ -31,6 +31,3 @@ mvn spring-boot:run
 mvn exec:java -Dexec.mainClass="com.learning.mvc.Application"
 ```
 
-- to stop the container, use `./stop.sh`
-- to start it up again, use `./start.sh`
-
