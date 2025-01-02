@@ -1,15 +1,18 @@
 #!/bin/bash
 
 BASE_PATH=$(dirname "$(realpath "$0")")
+USER_ID=$(id -u)
+GROUP_ID=$(id -g)
+USER="$(whoami)"
 
-docker build -t spring-demo-image "$BASE_PATH"
+docker build --build-arg USER_ID=$USER_ID --build-arg GROUP_ID=$GROUP_ID --build-arg USER="$USER" -t spring-demo-image "$BASE_PATH"
 
 docker run \
     --restart unless-stopped \
-    -v "$BASE_PATH/project:/workspace" \
-    -v "$BASE_PATH/.m2:/root/.m2" \
-    -v "$BASE_PATH/.zshrc:/root/.zshrc" \
-    -w /workspace \
+    --stop-timeout 1 \
+    -v "$BASE_PATH/project:/home/$USER/workspace" \
+    -v "$BASE_PATH/.m2:/home/$USER/.m2" \
+    -v "$BASE_PATH/.zshrc:/home/$USER/.zshrc" \
     -p 8080:8080 \
     -d \
     --name spring-demo-container \
