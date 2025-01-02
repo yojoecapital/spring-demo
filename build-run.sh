@@ -7,6 +7,9 @@ USER="$(whoami)"
 
 docker build --build-arg USER_ID=$USER_ID --build-arg GROUP_ID=$GROUP_ID --build-arg USER="$USER" -t spring-demo-image "$BASE_PATH"
 
+# make sure .m2 exists
+mkdir "$BASE_PATH/.m2"
+
 docker run \
     --restart unless-stopped \
     --stop-timeout 1 \
