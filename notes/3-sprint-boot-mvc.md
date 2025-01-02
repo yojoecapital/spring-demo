@@ -49,6 +49,7 @@ public Book addBook(@RequestBody Book book) {
 }
 ```
 
+- you can use `@RestController` so that Spring doesn't try to return a static (or template) file and instead a REST (Representational State Transfer) response
 - you can use `@GetMapping` for `GET` requests and `@PostMapping` for `POST`
 - the `@PathVariable` annotation denotes that a parameter is on the path
 - the `@RequestBody` annotation denotes that a parameter will be the request body
