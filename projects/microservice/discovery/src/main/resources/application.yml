@@ -1,0 +1,13 @@
+server:
+  port: 8761 # Default Eureka Server Port
+
+eureka:
+  client:
+    registerWithEureka: false  # Don't register this server with Eureka
+    fetchRegistry: false # Don't try to fetch from Eureka
+
+logging:
+  level:
+    org:
+      springframework: DEBUG
+      cloud: DEBUG
