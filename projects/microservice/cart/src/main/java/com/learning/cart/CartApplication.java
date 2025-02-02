@@ -17,8 +17,8 @@ public class CartApplication {
         return new RestTemplate();
     }
 
-	public static void main(String[] args) {
-		SpringApplication.run(CartApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(CartApplication.class, args);
+    }
 
 }
