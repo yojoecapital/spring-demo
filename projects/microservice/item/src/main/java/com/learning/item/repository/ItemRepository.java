@@ -1,5 +1,6 @@
 package com.learning.item.repository;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.stereotype.Repository;
@@ -21,5 +22,9 @@ public class ItemRepository {
 
     public Item findById(Integer id) {
         return items.get(id);
+    }
+
+    public Collection<Item> getItems() {
+        return items.values();
     }
 }

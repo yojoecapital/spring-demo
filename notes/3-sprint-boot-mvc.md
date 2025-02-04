@@ -98,3 +98,27 @@ public class BookService {
      // Getters and setters
  }
  ```
+
+## Running demo
+
+```bash
+# enter into the springboot project
+cd ~/projects/springboot
+
+# switch to Java version 17
+sdk use java 17.0.12-amzn 
+
+# compile the project
+mvn compile
+
+# running the Spring Boot MVC demo
+mvn spring-boot:run
+# OR
+mvn exec:java -Dexec.mainClass="com.learning.mvc.Application"
+
+```
+
+### Endpoints
+
+- GET `http://localhost:8085/books`: returns a JSON list of book information
+- DELETE `http://localhost:8085/books/[bookId]`: removes a book from the in-memory list

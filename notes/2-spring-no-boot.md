@@ -39,3 +39,20 @@ try (var context = new ClassPathXmlApplicationContext("spring.xml")) {
 }
 ```
 
+## Running demo
+
+```bash
+# enter into the springboot project
+cd ~/projects/springboot
+
+# switch to Java version 17
+sdk use java 17.0.12-amzn 
+
+# compile the project
+mvn compile
+
+# running the Spring demo
+mvn exec:java -Dexec.mainClass="com.learning.spring.Application"
+# use ^C to stop the program (it's running on an embedded tomcat server)
+```
+

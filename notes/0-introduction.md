@@ -15,6 +15,7 @@
 
 - https://www.youtube.com/watch?v=f6DHAgL7FWc
 - https://www.youtube.com/playlist?list=PLsyeobzWxl7qbKoSgR5ub6jolI8-ocxCF
+- https://www.youtube.com/playlist?list=PLqq-6Pq4lTTZSKAFG6aCDVDP86Qx4lNas
 
 ## Basic tips on running Maven projects
 

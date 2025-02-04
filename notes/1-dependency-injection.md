@@ -90,3 +90,22 @@ public void setGame(Game game) {
 }
 ```
 
+## Running demo
+
+```bash
+# enter into the springboot project
+cd ~/projects/springboot
+
+# switch to Java version 17
+sdk use java 17.0.12-amzn 
+
+# compile the project
+mvn compile
+
+# running the POJ demos
+java -cp target/classes/ com.learning.poj.LooselyCoupled 
+java -cp target/classes/ com.learning.poj.TightlyCoupled 
+```
+
+
+

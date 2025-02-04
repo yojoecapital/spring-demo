@@ -19,16 +19,19 @@ zuul:
     cart-service:
       path: /cart/**
       serviceId: cart
+    integration: /integration/**
 
 integration-routing-configuration:
+  serviceId: integration
+  forwardTo: item
   map:
-    apple: /item/0
-    banana: /item/1
-    orange: /item/2
-    bread: /item/3
-    eggs: /item/4
-    milk: /item/5
-    juice: /item/6
+    apple: '0'
+    banana: '1'
+    orange: '2'
+    bread: '3'
+    eggs: '4'
+    milk: '5'
+    juice: '6'
 
 logging:
   level:

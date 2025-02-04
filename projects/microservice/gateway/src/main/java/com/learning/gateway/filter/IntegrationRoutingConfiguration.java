@@ -10,4 +10,6 @@ import lombok.Data;
 @Data
 public class IntegrationRoutingConfiguration {
     private Map<String, String> map;
+    private String serviceId;
+    private String forwardTo;
 }

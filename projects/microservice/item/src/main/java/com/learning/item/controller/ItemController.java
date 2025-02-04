@@ -1,5 +1,6 @@
 package com.learning.item.controller;
 
+import java.util.Collection;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,17 +15,13 @@ public class ItemController {
         this.itemRepository = itemRepository;
     }
 
+    @GetMapping
+    public Collection<Item> getItems() {
+        return itemRepository.getItems();
+    }
+
     @GetMapping("/{id}")
     public Item getItem(@PathVariable("id") int id) {
         return itemRepository.findById(id);
-    }
-
-    @GetMapping("/{id}/{count}")
-    public Item[] getItems(@PathVariable("id") int id, @PathVariable int count) {
-        Item item = itemRepository.findById(id);
-        Item[] items = new Item[count];
-        for (int i = 0; i < count; i++)
-            items[i] = item;
-        return items;
     }
 }

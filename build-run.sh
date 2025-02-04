@@ -22,6 +22,7 @@ docker run \
     -p 8082:8082 \
     -p 8083:8083 \
     -p 8084:8084 \
+    -p 8085:8085 \
     -d \
     --name spring-demo-container \
     spring-demo-image tail -f /dev/null

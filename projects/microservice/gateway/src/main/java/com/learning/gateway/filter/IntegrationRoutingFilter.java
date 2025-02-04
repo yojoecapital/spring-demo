@@ -1,8 +1,14 @@
 package com.learning.gateway.filter;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import com.netflix.appinfo.InstanceInfo;
+import com.netflix.discovery.EurekaClient;
+import com.netflix.discovery.shared.Application;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 
@@ -11,6 +17,9 @@ public class IntegrationRoutingFilter extends ZuulFilter {
 
     @Autowired
     private IntegrationRoutingConfiguration configuration;
+
+    @Autowired
+    private EurekaClient eurekaClient;
 
     @Override
     public String filterType() {
@@ -24,41 +33,45 @@ public class IntegrationRoutingFilter extends ZuulFilter {
 
     @Override
     public boolean shouldFilter() {
-        RequestContext ctx = RequestContext.getCurrentContext();
-        HttpServletRequest request = ctx.getRequest();
-        String host = request.getHeader("Host");
-        if (host == null)
+        RequestContext context = RequestContext.getCurrentContext();
+        String serviceId = (String) context.get("serviceId");
+        if (!serviceId.equals(configuration.getServiceId()))
             return false;
-        String subdomain = extractSubdomain(host);
-        if (subdomain == null)
-            return false;
-        System.out.println("PASSING SHOULD FILTER");
-        return configuration.getMap().containsKey(subdomain); 
+        String subdomain = extractSubdomain(context);
+        return subdomain != null && configuration.getMap().containsKey(subdomain);
     }
 
     @Override
     public Object run() {
-        RequestContext ctx = RequestContext.getCurrentContext();
-        HttpServletRequest request = ctx.getRequest();
-        String host = request.getHeader("Host");
-        if (host == null)
-            return null;
-        String subdomain = extractSubdomain(host);
+        RequestContext context = RequestContext.getCurrentContext();
+        String subdomain = extractSubdomain(context);
         if (subdomain == null)
             return null;
-        String integrationPath = configuration.getMap().get(subdomain);
-        if (integrationPath == null)
+        Application application =
+                eurekaClient.getApplication(configuration.getForwardTo());
+        List<InstanceInfo> instances = application.getInstances();
+        if (instances.isEmpty()) {
+            System.out.println("No instances available for: " + configuration.getForwardTo());
             return null;
-        String requestURI = request.getRequestURI();
-        String newURI = integrationPath + requestURI;
-        ctx.set("requestURI", newURI);
-        System.out.println("FORWARDING FROM " + host + " TO " + newURI);
+        }
+        InstanceInfo instance = (InstanceInfo)instances.get(0);
+        String requestURI = configuration.getMap().get(subdomain) + context.get("requestURI");
+        String homePageUrl = instance.getHomePageUrl();
+        try {
+            URL url = new URL(homePageUrl + requestURI);
+            System.out.println("URL: " + url);
+            context.setRouteHost(url);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
-    private String extractSubdomain(final String host) {
-        if (host.contains(".")) {
-            return host.split("\\.")[0];
+    private String extractSubdomain(final RequestContext context) {
+        HttpServletRequest request = context.getRequest();
+        String serverName = request.getServerName();
+        if (serverName.contains(".")) {
+            return serverName.split("\\.")[0];
         }
         return null;
     }

@@ -12,22 +12,16 @@ This is a demonstration for using Java, Maven, and Spring Boot to build a simple
 - to enter into a command line session, you can use `./enter.sh`
   - the `spring-demo-image` includes `zsh` and `oh-my-zsh`
   - you can refer to the `.zshrc` file in the root directory of this repository for additional quality-of-life plugins
-- inside the container's shell session, you can execute the following to run each of the demos
+- once inside the container's shell session, you can follow the *demo instructions* in the [notes directory](./notes)
 
-```bash
-# running the POJ demos
-java -cp target/classes/ com.learning.poj.LooselyCoupled 
-java -cp target/classes/ com.learning.poj.TightlyCoupled 
+## Tech stack
 
-# running the Spring demo
-mvn exec:java -Dexec.mainClass="com.learning.spring.Application"
-
-# running the Spring Boot demo
-mvn exec:java -Dexec.mainClass="com.learning.springboot.Application"
-
-# running the Spring Boot MVC demo
-mvn spring-boot:run
-# OR
-mvn exec:java -Dexec.mainClass="com.learning.mvc.Application"
-```
-
+- base Image: `debian:12-slim`
+- Z Shell
+  - `zsh-autosuggestions`
+  - `zsh-syntax-highlighting`
+- SDKMAN with multiple Amazon Corretto JDK versions:
+  - Java 8: `8.0.422-amzn` (default)
+  - Java 11: 11.0.24-amzn`
+  - Java 17: `17.0.12-amzn`
+- caches remote development extensions in the `.vscode-server` directory

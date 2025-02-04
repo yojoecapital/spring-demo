@@ -1,11 +1,7 @@
 #!/bin/bash
 
-set -e
+PID_FILE="/tmp/pids.txt"
 
-# Path to store PIDs
-PID_FILE="/tmp/service_pids.txt"
-
-# Function to stop a service by PID
 stop-service() {
     local pid=$1
     if [ -n "$pid" ]; then
@@ -16,9 +12,8 @@ stop-service() {
     fi
 }
 
-# Stop services listed in the PID file
 if [ -f "$PID_FILE" ]; then
-    while IFS= read -r pid; do
+    while IFS=: read -r name pid; do
         stop-service "$pid"
     done < "$PID_FILE"
     rm "$PID_FILE"
