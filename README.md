@@ -2,7 +2,7 @@
 
 > This is actively being worked on as I continue to learn more about Spring...
 
-This is a demonstration for using Java, Maven, and Spring Boot to build a simple MVC web application in a containerized environment. The only prerequisite for this project is having the Docker CLI properly setup on a Linux machine. This project is meant to be used alongside my notes [here](./notes).
+This is a demonstration for using Java, Maven, Spring Boot, Eureka, and Zuul to build a distributed web applications in a containerized environment. The only prerequisite for this project is having the Docker CLI properly setup on a Linux machine. This project is meant to be used alongside my notes [here](./notes).
 
 ## Usage
 
