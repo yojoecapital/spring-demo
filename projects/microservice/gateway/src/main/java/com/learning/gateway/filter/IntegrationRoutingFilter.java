@@ -4,6 +4,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.netflix.appinfo.InstanceInfo;
@@ -14,6 +16,7 @@ import com.netflix.zuul.context.RequestContext;
 
 @Component
 public class IntegrationRoutingFilter extends ZuulFilter {
+    private static final Logger logger = LoggerFactory.getLogger(IntegrationRoutingFilter.class);
 
     @Autowired
     private IntegrationRoutingConfiguration configuration;
@@ -51,7 +54,7 @@ public class IntegrationRoutingFilter extends ZuulFilter {
                 eurekaClient.getApplication(configuration.getForwardTo());
         List<InstanceInfo> instances = application.getInstances();
         if (instances.isEmpty()) {
-            System.out.println("No instances available for: " + configuration.getForwardTo());
+            logger.info("No instances available for: {}", configuration.getForwardTo());
             return null;
         }
         InstanceInfo instance = (InstanceInfo)instances.get(0);
@@ -59,7 +62,7 @@ public class IntegrationRoutingFilter extends ZuulFilter {
         String homePageUrl = instance.getHomePageUrl();
         try {
             URL url = new URL(homePageUrl + requestURI);
-            System.out.println("URL: " + url);
+            logger.info("URL: ", url);
             context.setRouteHost(url);
         } catch (MalformedURLException e) {
             e.printStackTrace();

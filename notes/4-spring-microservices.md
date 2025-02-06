@@ -1,6 +1,8 @@
-# Spring Boot Micro-services
+# Spring Boot micro-services
 
 In this demo, I'll using Java 8, Eureka, and Zuul to create an application with micro-service architecture.
+
+> These notes will use the code in the `microservice` project.
 
 ## What is Eureka?
 
@@ -262,7 +264,7 @@ sdk use java 8.0.422-amzn
 
 # start up all the services
 # it might take a minute or 2 before all the clients recognize each other
-./start.sh
+./run.sh
 
 # you can tail the logs of a particular service with 'tail -f /tmp/<service>.log'
 tail -f /tmp/gateway.log 

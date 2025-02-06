@@ -2,7 +2,10 @@
 
 Spring Boot MVC is a framework that simplifies building web applications using a model view controller (MVC) design pattern. It integrates with Spring Boot's features for easier configuration and deployment.
 
+> These notes will use the code in the `springboot` project.
+
 ## Controller Layer
+
  ```java
  @Controller
  public class HomeController {
@@ -102,13 +105,8 @@ public class BookService {
 ## Running demo
 
 ```bash
-# enter into the springboot project
 cd ~/projects/springboot
-
-# switch to Java version 17
 sdk use java 17.0.12-amzn 
-
-# compile the project
 mvn compile
 
 # running the Spring Boot MVC demo

@@ -2,6 +2,8 @@
 
 It's useful to know how Spring operates without all the niceties of Spring Boot such as the annotation system.
 
+> These notes will use the code in the `springboot` project.
+
 ## Application Context and Bean Factory
 
 - Spring manages beans in the IoC container which is represented by the `ApplicationContext` interface
@@ -42,13 +44,8 @@ try (var context = new ClassPathXmlApplicationContext("spring.xml")) {
 ## Running demo
 
 ```bash
-# enter into the springboot project
 cd ~/projects/springboot
-
-# switch to Java version 17
 sdk use java 17.0.12-amzn 
-
-# compile the project
 mvn compile
 
 # running the Spring demo

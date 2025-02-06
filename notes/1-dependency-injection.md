@@ -1,4 +1,4 @@
-# Dependency Injection
+# Dependency injection
 
 - traditionally, managing each POJO (plain old Java object) is completely in the hands of the developer
   - the POJO exist logically in the JVM (Java virtual machine)
@@ -6,6 +6,8 @@
 - DI (**dependency injection**) is an implementation of IoC
 - objects that Spring manages are called **Spring beans** 
   - spring beans exist logically in the spring container (or IoC container, or spring context) which exists in the JVM
+
+> These notes will use the code in the `springboot` project.
 
 ## Spring beans with Spring Boot
 
@@ -96,7 +98,7 @@ public void setGame(Game game) {
 # enter into the springboot project
 cd ~/projects/springboot
 
-# switch to Java version 17
+# use Java 17
 sdk use java 17.0.12-amzn 
 
 # compile the project

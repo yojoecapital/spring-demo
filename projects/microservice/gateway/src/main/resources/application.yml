@@ -20,6 +20,11 @@ zuul:
       path: /cart/**
       serviceId: cart
     integration: /integration/**
+  host:
+    socket-timeout-millis: 10000  
+
+ribbon:
+  ReadTimeout: 10000
 
 integration-routing-configuration:
   serviceId: integration

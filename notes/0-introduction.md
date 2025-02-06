@@ -10,12 +10,17 @@
 	5. dependency injection (DI)
 	6. Spring beans
 	7. auto wiring 
+	8. micro-services
+	9. service discovery
+	10. cache
 
 ## Materials
 
 - https://www.youtube.com/watch?v=f6DHAgL7FWc
 - https://www.youtube.com/playlist?list=PLsyeobzWxl7qbKoSgR5ub6jolI8-ocxCF
 - https://www.youtube.com/playlist?list=PLqq-6Pq4lTTZSKAFG6aCDVDP86Qx4lNas
+- https://www.baeldung.com/java-caching-caffeine
+- https://www.baeldung.com/spring-boot-caffeine-cache
 
 ## Basic tips on running Maven projects
 

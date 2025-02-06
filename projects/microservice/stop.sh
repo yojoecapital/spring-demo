@@ -3,20 +3,28 @@
 PID_FILE="/tmp/pids.txt"
 
 stop-service() {
-    local pid=$1
-    if [ -n "$pid" ]; then
-        echo "Stopping service with PID $pid"
-        kill "$pid" && echo "Service stopped."
+    local service_name=$1
+
+    if [ -f "$PID_FILE" ]; then
+        if [ -n "$service_name" ]; then
+            pid=$(grep "^$service_name:" "$PID_FILE" | cut -d: -f2)
+            if [ -n "$pid" ]; then
+                echo "Stopping service $service_name:$pid."
+                kill "$pid" && echo "Service $service_name stopped."
+                grep -v "^$service_name:" "$PID_FILE" > "/tmp/pids_tmp.txt" && mv "/tmp/pids_tmp.txt" "$PID_FILE"
+            else
+                echo "Service '$service_name' not found."
+            fi
+        else
+            while IFS=: read -r name pid; do
+                echo "Stopping service $name:$pid."
+                kill "$pid" && echo "Service $name stopped."
+            done < "$PID_FILE"
+            rm -f "$PID_FILE"
+        fi
     else
-        echo "No PID found for this service."
+        echo "No running services found."
     fi
 }
 
-if [ -f "$PID_FILE" ]; then
-    while IFS=: read -r name pid; do
-        stop-service "$pid"
-    done < "$PID_FILE"
-    rm "$PID_FILE"
-else
-    echo "No running services found."
-fi
+stop-service "$1"

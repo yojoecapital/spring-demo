@@ -11,4 +11,8 @@ public class Item {
     protected int id;
     protected String name;
     protected double cost;
+
+    public Item Copy() {
+        return new Item(id, name, cost);
+    }
 }
