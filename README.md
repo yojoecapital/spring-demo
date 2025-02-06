@@ -22,6 +22,6 @@ This is a demonstration for using Java, Maven, Spring Boot, Eureka, Zuul, and Ca
   - `zsh-syntax-highlighting`
 - SDKMAN with multiple Amazon Corretto JDK versions:
   - Java 8: `8.0.422-amzn` (default)
-  - Java 11: 11.0.24-amzn`
+  - Java 11: `11.0.24-amzn`
   - Java 17: `17.0.12-amzn`
 - caches remote development extensions in the `.vscode-server` directory
