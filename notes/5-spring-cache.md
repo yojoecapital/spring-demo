@@ -1,4 +1,4 @@
-# Spring Boot cache
+# 5. Spring Boot cache
 
 > These notes will use the code in the `microservice` project.
 

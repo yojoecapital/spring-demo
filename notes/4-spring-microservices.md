@@ -1,4 +1,4 @@
-# Spring Boot micro-services
+# 4. Spring Boot micro-services
 
 In this demo, I'll using Java 8, Eureka, and Zuul to create an application with micro-service architecture.
 

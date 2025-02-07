@@ -1,4 +1,4 @@
-# Dependency injection
+# 1. Dependency injection
 
 - traditionally, managing each POJO (plain old Java object) is completely in the hands of the developer
   - the POJO exist logically in the JVM (Java virtual machine)

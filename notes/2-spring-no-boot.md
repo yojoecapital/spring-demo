@@ -1,4 +1,4 @@
-# Using Spring without Boot
+# 2. Using Spring without Boot
 
 It's useful to know how Spring operates without all the niceties of Spring Boot such as the annotation system.
 

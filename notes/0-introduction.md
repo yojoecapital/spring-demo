@@ -1,4 +1,4 @@
-# Introduction
+# 0. Introduction
 
 - you can build a variety of applications with Java, Spring, and Spring Boot
 - the Spring Framework provides all the core features
