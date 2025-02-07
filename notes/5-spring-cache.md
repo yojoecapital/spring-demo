@@ -119,7 +119,17 @@ public class CacheConfig {
 }
 ```
 
-In the code block above, I'm passing a `Caffeine` cache builder (not the cache itself) with it's configured properties.
+- in the code block above, I'm passing a `Caffeine` cache builder (not the cache itself) with it's configured properties
+- any caches that are referenced but do not exist yet in annotations like `@Cacheable` will be created using this default cache builder
+- you can also manually add in a custom cache with it's own properties specified apart from the default cache builder by using `registerCustomCache` as such
+
+```java
+Cache<Object, Object> itemsCache = Caffeine.newBuilder()
+            .expireAfterWrite(1, TimeUnit.MINUTES)
+            .maximumSize(5);
+CaffeineCacheManager cacheManager = new CaffeineCacheManager();
+cacheManager.registerCustomCache("items-cache", itemsCache);
+```
 
 ### Annotations
 
