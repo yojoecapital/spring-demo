@@ -22,7 +22,8 @@ public class CacheConfig {
             .expireAfterWrite(1, TimeUnit.MINUTES)
             .maximumSize(5)
             .removalListener(CacheConfig::LogCacheRemovalCause)
-            .evictionListener(CacheConfig::LogCacheEvictionCause);
+            .evictionListener(CacheConfig::LogCacheEvictionCause)
+            .recordStats();
         CaffeineCacheManager cacheManager = new CaffeineCacheManager();
         cacheManager.setCaffeine(caffeine);
         return cacheManager;

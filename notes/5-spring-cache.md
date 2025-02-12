@@ -29,7 +29,9 @@ public ItemService(ItemRepository itemRepository) {
             // listeners
             .removalListener(ItemService::LogCacheRemovalCause)
             .evictionListener(ItemService::LogCacheEvictionCause)
-            .build();
+        	// include this so the cache.stats() method returns something usefull
+        	.recordStats();
+            .build()
 }
 ```
 

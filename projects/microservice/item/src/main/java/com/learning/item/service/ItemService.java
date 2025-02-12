@@ -24,6 +24,7 @@ public class ItemService {
                 .maximumSize(5)
                 .removalListener(ItemService::LogCacheRemovalCause)
                 .evictionListener(ItemService::LogCacheEvictionCause)
+                .recordStats()
                 .build(itemRepository::findById);
     }
     
