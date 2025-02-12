@@ -1,7 +1,6 @@
 package com.learning.cart.service;
 
 import java.util.List;
-import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,14 +24,18 @@ public class CartService {
     @Autowired
     private CacheManager cacheManager;
 
+    @Autowired
+    private CartService self;
+
     @Cacheable(value = "carts-cache", key = "#itemIds")
     public Cart getCart(List<Integer> itemIds) {
-        Item[] items = itemIds.stream().map(this::getItem).toArray(Item[]::new);
-        logger.info("Calculating total for {} items. This might take a while...", items.length);
         double total = 0;
-        for (Item item : items) {
+        Item[] items = new Item[itemIds.size()];
+        logger.info("Calculating total for {} items. This might take a while...", items.length);
+        for (int i = 0; i < items.length; i++) {
             Wait();
-            total += item.getCost();
+            items[i] = self.getItem(itemIds.get(i));
+            total += items[i].getCost();
         }
         return new Cart(items, total);
     }
@@ -53,11 +56,15 @@ public class CartService {
     }
 
     @SuppressWarnings("unchecked")
-    public Stream<CacheStats> getCacheStats() {
-        return cacheManager.getCacheNames().stream().map(cacheManager::getCache)
-                .map(cache -> ((Cache<Object, Object>) cache.getNativeCache()).stats());
+    public String getCacheStatsAsString() {
+        StringBuilder builder = new StringBuilder();
+        for (String name : cacheManager.getCacheNames()) {
+            CacheStats stats = ((Cache<Object, Object>)cacheManager.getCache(name).getNativeCache()).stats();
+            builder.append(String.format("%s: %s\n", name, stats));
+        }
+        return builder.toString();
     }
 
-    @CacheEvict(value = {"carts-cache", "items-cache"}, allEntries = true)
+    @CacheEvict(value = {"items-cache", "carts-cache"}, allEntries = true)
     public void clearCache() {}
 }

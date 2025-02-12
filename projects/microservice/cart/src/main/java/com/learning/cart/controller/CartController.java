@@ -17,8 +17,7 @@ public class CartController {
     
     @GetMapping("/cache")
     public String getCacheStats() {
-        return String.join("\n",
-                cartService.getCacheStats().map(cache -> cache.toString()).toArray(String[]::new));
+        return cartService.getCacheStatsAsString();
     }
     
     @DeleteMapping("/cache")

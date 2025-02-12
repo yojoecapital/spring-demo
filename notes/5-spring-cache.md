@@ -165,6 +165,35 @@ public void clearCache() {}
 - this method will evict all entires in `"carts-cache"` and `"items-cache"` because of `allEntries`
 - a `key` can also be given to evict by key
 
+#### Self-invocation
+
+- it is important to note that Spring’s `@Cacheable` annotation will only work when a bean calls the method from another bean
+- not when it's called internally within the same class
+- if self-invocation in a class is required for caching, you'll have to inject a bean of it's own type 
+- here's an example of that:
+
+```java
+@Autowired
+private CartService self; // self injected bean
+
+@Cacheable(value = "carts-cache", key = "#itemIds")
+public Cart getCart(List<Integer> itemIds) {
+    double total = 0;
+    Item[] items = new Item[itemIds.size()];
+    for (int i = 0; i < items.length; i++) {
+        // call getItem from the context of a bean
+        items[i] = self.getItem(itemIds.get(i));
+        total += items[i].getCost();
+    }
+    return new Cart(items, total);
+}
+
+@Cacheable(value = "items-cache", key = "#id")
+public Item getItem(Integer id) {
+    return restTemplate.getForObject("http://item/{id}", Item.class, id);
+}
+```
+
 ## Running demo
 
 ```bash

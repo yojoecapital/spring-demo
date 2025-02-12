@@ -9,7 +9,7 @@ run-service() {
         exit 1
     fi
     cd "$HOME/projects/microservice/$1" || exit 1
-    mvn clean install
+    mvn clean package install
     mvn spring-boot:run > "/tmp/$1.log" 2>&1 &
     echo "$1:$!" >> /tmp/pids.txt 
 }
