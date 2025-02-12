@@ -16,7 +16,7 @@ docker run \
     --stop-timeout 1 \
     -v "$BASE_PATH/projects:/home/$USER/projects" \
     -v "$BASE_PATH/.m2:/home/$USER/.m2" \
-    -v "$BASE_PATH/.zshrc:/home/$USER/.zshrc" \
+    -v "$BASE_PATH/zshrc:/home/$USER/.zshrc" \
     -v "$BASE_PATH/.vscode-server:/home/$USER/.vscode-server" \
     -p 8761:8761 \
     -p 8082:8082 \
