@@ -10,7 +10,7 @@ RUN groupadd -g ${GROUP_ID} "${USER}" && \
     
 # Install zsh and dependencies using microdnf
 RUN apt-get update && apt-get install -y \
-  sudo \
+  	sudo \
     nano \
     java-common \
     zsh \
@@ -52,12 +52,16 @@ USER "${USER}"
 # Install Oh My Zsh
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
+# Add the hostname+robbyrussell theme
+COPY "zsh/custom.zsh-theme" "/home/$USER/.oh-my-zsh/custom/themes/"
+
 # Install zsh-autosuggestions and zsh-syntax-highlighting plugins
 RUN git clone https://github.com/zsh-users/zsh-autosuggestions "/home/$USER/.oh-my-zsh/custom/plugins/zsh-autosuggestions" \
     && git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "/home/$USER/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
 
+
 # Make these directories
 RUN mkdir -p "/home/${USER}/.vscode-server"
-RUN mkdir -p "/home/${USER}/.md"
+RUN mkdir -p "/home/${USER}/.m2"
 
 WORKDIR "/home/${USER}"

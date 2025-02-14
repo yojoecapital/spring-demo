@@ -1,6 +1,6 @@
 # Oh My Zsh!
 export ZSH="$HOME/.oh-my-zsh"
-ZSH_THEME="robbyrussell"
+ZSH_THEME="custom"
 
 # Stops the weird '%' from being printed
 unsetopt PROMPT_SP 
