@@ -1,4 +1,4 @@
-**/.m2/
-**/.vscode-server/
+**/m2/
+**/vscode-server/
 **/.vscode/
 **/pids.txt
