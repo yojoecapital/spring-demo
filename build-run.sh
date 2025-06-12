@@ -6,7 +6,6 @@ GROUP_ID=$(id -g)
 USER="$(whoami)"
 NAME="$(cat "$BASE_PATH/name.txt")"
 IMAGE_NAME="$NAME-image"
-CONTAINER_NAME="$NAME-container"
 
 docker build --build-arg USER_ID=$USER_ID --build-arg GROUP_ID=$GROUP_ID --build-arg USER="$USER" -t "$IMAGE_NAME" "$BASE_PATH"
 
@@ -20,13 +19,16 @@ docker run \
     -v "$BASE_PATH/m2:/home/$USER/.m2" \
     -v "$BASE_PATH/zsh/.zshrc:/home/$USER/.zshrc" \
     -v "$BASE_PATH/vscode-server:/home/$USER/.vscode-server" \
-    -p 8761:8761 \
-    -p 8082:8082 \
-    -p 8083:8083 \
-    -p 8084:8084 \
-    -p 8085:8085 \
+    --net=host \
     -d \
-    --name "$CONTAINER_NAME" \
+    --name "$NAME" \
     --hostname "$NAME" \
     "$IMAGE_NAME" tail -f /dev/null
 
+OPENAM_NAME="openam-$NAME"
+
+docker run -it --name "$OPENAM_NAME" \
+  -p 8080:8080 \
+  -e SERVER_URL=http://localhost:8080/openam \
+  -e AM_SETUP=true \
+  ghcr.io/openidentityplatform/openam/openam:14.5.4

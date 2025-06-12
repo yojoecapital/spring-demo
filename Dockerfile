@@ -32,9 +32,9 @@ RUN usermod -aG sudo "${USER}"
 RUN echo "${USER} ALL=(ALL) NOPASSWD:ALL" > "/etc/sudoers.d/${USER}"
     
 # Install Maven
-RUN wget -O /tmp/apache-maven.tar.gz https://dlcdn.apache.org/maven/maven-3/3.9.4/binaries/apache-maven-3.9.4-bin.tar.gz && \
+RUN wget -O /tmp/apache-maven.tar.gz https://dlcdn.apache.org/maven/maven-3/3.9.10/binaries/apache-maven-3.9.10-bin.tar.gz && \
     tar -xzf /tmp/apache-maven.tar.gz -C /opt && \
-    ln -s /opt/apache-maven-3.9.4/bin/mvn /usr/bin/mvn && \
+    ln -s /opt/apache-maven-3.9.10/bin/mvn /usr/bin/mvn && \
     rm /tmp/apache-maven.tar.gz
 
 # Install SDKMAN 
