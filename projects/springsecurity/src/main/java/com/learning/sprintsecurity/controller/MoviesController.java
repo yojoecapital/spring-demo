@@ -13,16 +13,16 @@ import lombok.RequiredArgsConstructor;
 public class MoviesController {
     @GetMapping("/movies")
     public String getMoviesForBusiness(@RequestParam String business) {
-        return "Get books for business: " + business;
+        return "Get movies for business: " + business;
     }
 
     @DeleteMapping("/movies")
     public String deleteMoviesForBusiness(@RequestParam String business) {
-        return "Delete books for business: " + business;
+        return "Delete movies for business: " + business;
     }
 
     @PostMapping("/movies")
     public String createMoviesForBusiness(@RequestParam String business) {
-        return "Post books for business: " + business;
+        return "Post movies for business: " + business;
     }
 }
