@@ -7,7 +7,10 @@ import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -25,12 +28,31 @@ public class ScopedAuthorizationManager implements AuthorizationManager<RequestA
             .toList();
     }
 
+    private String getBusinessFromJwt(Authentication authentication) {
+        Object principal = authentication.getPrincipal();
+        if (principal instanceof Jwt jwt) {
+            Object claimsObj = jwt.getClaim("claims");
+            if (claimsObj instanceof String claimsStr) {
+                try {
+                    ObjectMapper mapper = new ObjectMapper();
+                    var claimsJson = mapper.readTree(claimsStr);
+                    var businessNode = claimsJson.get("business");
+                    return businessNode != null ? businessNode.asText() : null;
+                } catch (Exception e) {
+                    return null;
+                }
+            }
+        }
+        return null;
+    }
+
     public boolean hasPermissionFor(
         Authentication authentication, 
         String resource, String permission, String business
     ) {
-        String targetScope = String.format("%s:%s:%s", permission, resource, business);
-        return getScopes(authentication).contains(targetScope);
+        String targetScope = String.format("%s:%s", permission, resource);
+        return getScopes(authentication).contains(targetScope) && 
+               getBusinessFromJwt(authentication).equals(business);
     }
 
     @Override
@@ -43,9 +65,9 @@ public class ScopedAuthorizationManager implements AuthorizationManager<RequestA
             default -> null;
         };
         if (permission == null) return new AuthorizationDecision(false);
+        Authentication auth = authentication.get();
         String business = request.getParameter("business");
         if (business == null || business.isEmpty()) return new AuthorizationDecision(false);
-        Authentication auth = authentication.get();
         return new AuthorizationDecision(hasPermissionFor(auth, resource, permission, business));
     }
 }

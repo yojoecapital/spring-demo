@@ -2,3 +2,7 @@
 **/vscode-server/
 **/.vscode/
 **/pids.txt
+projects/microservice/*/target/
+projects/microservice/*/target/**
+projects/*/target/
+projects/*/target/**

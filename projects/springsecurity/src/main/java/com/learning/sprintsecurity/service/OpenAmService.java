@@ -9,8 +9,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.learning.sprintsecurity.model.AccessToken;
 import com.learning.sprintsecurity.model.AccessTokenRequest;
 import com.learning.sprintsecurity.model.AdminTokenId;
@@ -49,33 +50,24 @@ public class OpenAmService {
         return sb.toString();
     }
 
-    private HttpHeaders createHeaders(String contentType) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("X-OpenAM-Username", amadminUsername);
-        headers.set("X-OpenAM-Password", amadminPassword);
+    private void setIPlanetDirectoryProHeader(HttpHeaders headers) {
+        HttpHeaders amadminHeaders = new HttpHeaders();
+        amadminHeaders.set("X-OpenAM-Username", amadminUsername);
+        amadminHeaders.set("X-OpenAM-Password", amadminPassword);
         log.info("Creating headers for OpenAM authentication with: " + amadminUsername + ", " + amadminPassword);
         AdminTokenId adminTokenId = restTemplate.exchange(
             AUTHENTICATION_URL, 
             HttpMethod.POST, 
-            new HttpEntity<>(headers), 
+            new HttpEntity<>(amadminHeaders), 
             AdminTokenId.class
         ).getBody();
         log.info("Admin ID Token: " + adminTokenId.getTokenId());
-        HttpHeaders returnHeaders = new HttpHeaders();
-        returnHeaders.set("iPlanetDirectoryPro", adminTokenId.getTokenId());
-        returnHeaders.set("Content-Type", contentType);
-        returnHeaders.set("Accept-API-Version", "resource=1.0");
-        return returnHeaders;
+        headers.set("iPlanetDirectoryPro", adminTokenId.getTokenId());
     }
 
-    private void debugJsonPayload(Object payload) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            String json = mapper.writeValueAsString(payload);
-            log.info(json);
-        } catch (Exception e) {
-            log.warning("Failed to serialize: " + e.getMessage());
-        }
+    private void setHeaders(HttpHeaders headers, String contentType) {
+        headers.set("Content-Type", contentType);
+        headers.set("Accept-API-Version", "resource=1.0");
     }
 
     public ClientKeys createOAuth2Client(String business, CreateClientKeysRequest createClientKeysRequest) {
@@ -85,11 +77,13 @@ public class OpenAmService {
         OpemAmOAuth2Client oAuth2Client = new OpemAmOAuth2Client(
             business, clientSecret, createClientKeysRequest.getDefaultMaxAge(), createClientKeysRequest.getDefaultScopes() 
         );
+        HttpHeaders headers = new HttpHeaders();
+        setIPlanetDirectoryProHeader(headers);
+        setHeaders(headers, "application/json");
         log.info("Creating OAuth2 client: " + oAuth2Client);
-        debugJsonPayload(oAuth2Client);
         restTemplate.exchange(
             url, HttpMethod.PUT, 
-            new HttpEntity<>(oAuth2Client, createHeaders("application/json")), 
+            new HttpEntity<>(oAuth2Client, headers), 
             Void.class
         );
         return new ClientKeys(clientId, clientSecret);
@@ -97,27 +91,35 @@ public class OpenAmService {
 
     public void deleteOAuth2Client(String clientId) {
         String url = OAUTH2_CLIENT_URL + "/" + clientId;
+        HttpHeaders headers = new HttpHeaders();
+        setIPlanetDirectoryProHeader(headers);
+        setHeaders(headers, "application/json");
         log.info("Deleting OAuth2 client for business: " + clientId);
         restTemplate.exchange(
             url, HttpMethod.DELETE, 
-            new HttpEntity<>(createHeaders("application/json")), 
+            new HttpEntity<>(headers), 
             Void.class
         );
     }
 
-    public AccessToken getAccessToken(AccessTokenRequest accessTokenRequest) {
-        String url = ACCESS_TOKEN_URL + String.format(
-            "?grant_type=client_credentials&client_id=%s&client_secret=%s", 
-            accessTokenRequest.getClientId(), accessTokenRequest.getClientSecret()
-        );
+    public AccessToken getAccessToken(AccessTokenRequest accessTokenRequest, String business) {
+        String claimsJson = String.format("{\"business\":\"%s\"}", business);
+        UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUriString(ACCESS_TOKEN_URL)
+            .queryParam("grant_type", "client_credentials")
+            .queryParam("client_id", accessTokenRequest.getClientId())
+            .queryParam("client_secret", accessTokenRequest.getClientSecret())
+            .queryParam("claims", claimsJson);
         if (!accessTokenRequest.getScopes().isEmpty()) {
-            url += "&scope=" + String.join(" ", accessTokenRequest.getScopes());
+            uriComponentsBuilder.queryParam("scope", String.join(" ", accessTokenRequest.getScopes()));
         }
         log.info("Requesting access token for client: " + accessTokenRequest.getClientId());
-        log.info(url);
+        log.info(uriComponentsBuilder.toUriString());
+        HttpHeaders headers = new HttpHeaders();
+        setHeaders(headers, "application/x-www-form-urlencoded");
+        UriComponents uriComponents = uriComponentsBuilder.build().encode();
         OpenAmAccessToken openAmAccessToken = restTemplate.exchange(
-            url, HttpMethod.POST, 
-            new HttpEntity<>(createHeaders("application/x-www-form-urlencoded")), 
+            uriComponents.toUri(), HttpMethod.POST,
+            new HttpEntity<>(headers),
             OpenAmAccessToken.class
         ).getBody();
         return new AccessToken(

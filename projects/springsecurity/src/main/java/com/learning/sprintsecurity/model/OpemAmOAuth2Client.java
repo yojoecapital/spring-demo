@@ -13,18 +13,12 @@ import lombok.ToString;
 @ToString
 public class OpemAmOAuth2Client {
 
-    private static final List<String> DEFAULT_SCOPES = Arrays.asList(
+    private static final List<String> ALLOWED_SCOPES = Arrays.asList(
         "read:movies",
         "write:movies",
         "read:books",
         "write:books"
     );
-
-    private static List<String> nameScopes(List<String> scopes, String business) {
-        return DEFAULT_SCOPES.stream()
-            .map(scope -> scope + ":" + business)
-            .toList();
-    }
 
     private static List<String> indexScopes(List<String> scopes) {
         return IntStream.range(0, scopes.size())
@@ -40,13 +34,12 @@ public class OpemAmOAuth2Client {
         this.userPassword = clientSecret;
         this.defaultScopes = indexScopes(defaultScopes);
 
-        List<String> allowedScopes = nameScopes(DEFAULT_SCOPES, business);
-        scopes = indexScopes(allowedScopes);
         for (String defaultScope : defaultScopes) {
-            if (!allowedScopes.contains(defaultScope)) {
+            if (!ALLOWED_SCOPES.contains(defaultScope)) {
                 throw new IllegalArgumentException("Default scope " + defaultScope + " is not in the scopes list.");
             }
         }
+        scopes = indexScopes(ALLOWED_SCOPES);
     }
 
     @JsonProperty("userpassword")

@@ -17,4 +17,13 @@ public class ClientIdsRepository {
     public void addClientId(String businessName, String clientId) {
         businessToClientIds.computeIfAbsent(businessName, k -> new java.util.ArrayList<>()).add(clientId);
     }
+
+    public String getBusinessByClientId(String clientId) {
+        for (Map.Entry<String, List<String>> entry : businessToClientIds.entrySet()) {
+            if (entry.getValue() != null && entry.getValue().contains(clientId)) {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
 }
