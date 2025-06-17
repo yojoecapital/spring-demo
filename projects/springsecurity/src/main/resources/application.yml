@@ -17,4 +17,4 @@ logging:
 openam:
   amadmin:
     username: amadmin
-    password: dsiscool02
+    password: helloworld02
