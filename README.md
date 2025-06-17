@@ -24,4 +24,7 @@ This is a demonstration for using Java, Maven, Spring Boot, Eureka, Zuul, and Ca
   - Java 8: `8.0.422-amzn` (default)
   - Java 11: `11.0.24-amzn`
   - Java 17: `17.0.12-amzn`
+  - while in a shell session in the container, you can use `sdk use java [version]` to change which Java version is being used in that session
+- Maven command `mvn`: use the `mvn` command to compile projects
 - caches remote development extensions in the `.vscode-server` directory
+- OpenAM server for an OAuth 2.0 provider
